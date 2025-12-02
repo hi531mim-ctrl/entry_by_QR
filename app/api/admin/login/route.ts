@@ -20,10 +20,12 @@ export async function POST(request: NextRequest) {
 
     // デバッグ用ログ
     console.log('Environment variable exists:', !!process.env.ADMIN_PASSWORD_HASH)
-    console.log('Using hash:', passwordHash.substring(0, 20) + '...')
+    console.log('Using hash (full):', passwordHash)
+    console.log('Default hash:', defaultPasswordHash)
     console.log('Input password:', password)
 
     const isValid = await bcrypt.compare(password, passwordHash)
+    console.log('bcrypt comparison result:', isValid)
 
     if (!isValid) {
       return NextResponse.json(
