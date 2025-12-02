@@ -7,8 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("POSTGRES_PRISMA_URL") // Will fallback to DATABASE_URL if not found
-  directUrl = env("POSTGRES_URL_NON_POOLING") // Required for Vercel Postgres
+  url      = env("DATABASE_URL")
 }
 
 model Participant {
