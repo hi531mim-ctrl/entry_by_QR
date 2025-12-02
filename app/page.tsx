@@ -40,9 +40,6 @@ export default function Home() {
         setQrCodeUrl(qrUrl)
         setParticipantId(data.participant.id)
         setShowQR(true)
-
-        // デバッグ：QRコードの内容を確認
-        alert(`生成されたID: ${data.participant.id}`)
       } else {
         setMessage({ text: data.error, type: 'error' })
       }

@@ -17,6 +17,7 @@ export default function QRScanner({ onScan }: QRScannerProps) {
   const streamRef = useRef<MediaStream | null>(null)
   const animationRef = useRef<number | null>(null)
   const frameCountRef = useRef(0)
+  const scanningRef = useRef(false) // scanningのref版を追加
 
   useEffect(() => {
     startCamera()
@@ -38,10 +39,12 @@ export default function QRScanner({ onScan }: QRScannerProps) {
       if (videoRef.current) {
         videoRef.current.srcObject = stream
 
-        videoRef.current.onloadedmetadata = () => {
-          videoRef.current?.play()
+        videoRef.current.onloadedmetadata = async () => {
+          await videoRef.current?.play()
+          scanningRef.current = true // refを先に更新
           setScanning(true)
           setDebugInfo('スキャン中...')
+          console.log('Camera started, beginning scan loop')
           scanQRCode()
         }
       }
@@ -52,6 +55,7 @@ export default function QRScanner({ onScan }: QRScannerProps) {
   }
 
   const stopCamera = () => {
+    scanningRef.current = false // refを先に更新
     setScanning(false)
 
     if (animationRef.current) {
@@ -70,7 +74,7 @@ export default function QRScanner({ onScan }: QRScannerProps) {
   }
 
   const scanQRCode = () => {
-    if (!scanning) {
+    if (!scanningRef.current) {
       console.log('Scan stopped')
       return
     }
