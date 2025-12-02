@@ -12,6 +12,7 @@ export default function QRScanner({ onScan }: QRScannerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [error, setError] = useState('')
   const [scanning, setScanning] = useState(false)
+  const [debugInfo, setDebugInfo] = useState('')
   const streamRef = useRef<MediaStream | null>(null)
   const animationRef = useRef<number | null>(null)
 
@@ -24,11 +25,13 @@ export default function QRScanner({ onScan }: QRScannerProps) {
 
   const startCamera = async () => {
     try {
+      setDebugInfo('カメラを起動中...')
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment' },
       })
 
       streamRef.current = stream
+      setDebugInfo('カメラ起動完了。QRコードをかざしてください')
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream
@@ -36,6 +39,7 @@ export default function QRScanner({ onScan }: QRScannerProps) {
         videoRef.current.onloadedmetadata = () => {
           videoRef.current?.play()
           setScanning(true)
+          setDebugInfo('スキャン中...')
           scanQRCode()
         }
       }
@@ -87,15 +91,21 @@ export default function QRScanner({ onScan }: QRScannerProps) {
       if (canvas.width > 0 && canvas.height > 0) {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-        const code = jsQR(imageData.data, imageData.width, imageData.height)
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+          inversionAttempts: 'dontInvert',
+        })
 
         if (code) {
           const scannedId = code.data.trim()
+          console.log('QR Code detected:', scannedId)
+          setDebugInfo(`検出: ${scannedId}`)
 
           if (scannedId.startsWith('PARTICIPANT_')) {
             onScan(scannedId)
             stopCamera()
             return
+          } else {
+            setDebugInfo(`無効なQR: ${scannedId.substring(0, 20)}...`)
           }
         }
       }
@@ -124,6 +134,11 @@ export default function QRScanner({ onScan }: QRScannerProps) {
       {scanning && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="w-48 h-48 border-4 border-teal-500 rounded-lg animate-pulse" />
+        </div>
+      )}
+      {debugInfo && (
+        <div className="mt-2 p-2 bg-blue-500/15 border border-blue-500/25 text-blue-500 text-xs rounded">
+          {debugInfo}
         </div>
       )}
     </div>
