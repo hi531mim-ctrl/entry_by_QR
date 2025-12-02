@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>イベント参加登録・入場管理システム</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-slate-500-rgb: 98, 108, 113;
+            --color-red-500-rgb: 192, 21, 47;
+            --color-red-400-rgb: 255, 84, 89;
+            --color-orange-500-rgb: 168, 75, 47;
+            --color-bg-1: rgba(59, 130, 246, 0.08);
+            --color-bg-2: rgba(245, 158, 11, 0.08);
+            --color-bg-3: rgba(34, 197, 94, 0.08);
+            --color-bg-4: rgba(239, 68, 68, 0.08);
+            --color-bg-5: rgba(147, 51, 234, 0.08);
+            --color-bg-6: rgba(249, 115, 22, 0.08);
+            --color-bg-7: rgba(236, 72, 153, 0.08);
+            --color-bg-8: rgba(6, 182, 212, 0.08);
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-btn-primary-text: var(--color-cream-50);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-error: var(--color-red-500);
+            --color-success: var(--color-teal-500);
+            --color-warning: var(--color-orange-500);
+            --color-info: var(--color-slate-500);
+            --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+            --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-size-base: 14px;
+            --font-size-sm: 12px;
+            --font-size-md: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 550;
+            --font-weight-bold: 600;
+            --line-height-tight: 1.2;
+            --line-height-normal: 1.5;
+            --space-4: 4px;
+            --space-6: 6px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --radius-sm: 6px;
+            --radius-base: 8px;
+            --radius-md: 10px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+            --duration-fast: 150ms;
+            --duration-normal: 250ms;
+            --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+            --focus-ring: 0 0 0 3px var(--color-focus-ring);
+            --focus-outline: 2px solid var(--color-primary);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: var(--font-size-base);
+            font-family: var(--font-family-base);
+            line-height: var(--line-height-normal);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-background);
+        }
+
+        h1, h2, h3, h4 {
+            font-weight: var(--font-weight-semibold);
+            line-height: var(--line-height-tight);
+            margin-bottom: var(--space-16);
+        }
+
+        h1 {
+            font-size: var(--font-size-3xl);
+        }
+
+        h2 {
+            font-size: var(--font-size-2xl);
+        }
+
+        h3 {
+            font-size: var(--font-size-xl);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--space-20);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8) var(--space-16);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-base);
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all var(--duration-normal) var(--ease-standard);
+            text-decoration: none;
+        }
+
+        .btn:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .btn--primary {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+        }
+
+        .btn--primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn--secondary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+
+        .btn--secondary:hover {
+            background: var(--color-secondary-hover);
+        }
+
+        .btn--outline {
+            background: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+        }
+
+        .btn--outline:hover {
+            background: var(--color-secondary);
+        }
+
+        .btn--lg {
+            padding: var(--space-10) var(--space-20);
+            font-size: var(--font-size-lg);
+            width: 100%;
+        }
+
+        .btn--sm {
+            padding: var(--space-4) var(--space-12);
+            font-size: var(--font-size-sm);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-16);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-8);
+            font-weight: var(--font-weight-medium);
+            font-size: var(--font-size-sm);
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: var(--space-8) var(--space-12);
+            font-size: var(--font-size-md);
+            color: var(--color-text);
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+            font-family: var(--font-family-base);
+        }
+
+        .form-control:focus {
+            border-color: var(--color-primary);
+            outline: var(--focus-outline);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        .card {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            box-shadow: var(--shadow-sm);
+            padding: var(--space-20);
+            margin-bottom: var(--space-16);
+        }
+
+        .status-message {
+            padding: var(--space-12) var(--space-16);
+            border-radius: var(--radius-base);
+            margin-bottom: var(--space-16);
+            font-weight: var(--font-weight-medium);
+            display: none;
+        }
+
+        .status-message.success {
+            background-color: rgba(var(--color-teal-500-rgb), 0.15);
+            color: var(--color-success);
+            border: 1px solid rgba(var(--color-teal-500-rgb), 0.25);
+            display: block;
+        }
+
+        .status-message.error {
+            background-color: rgba(var(--color-red-500-rgb), 0.15);
+            color: var(--color-error);
+            border: 1px solid rgba(var(--color-red-500-rgb), 0.25);
+            display: block;
+        }
+
+        .status-message.warning {
+            background-color: rgba(var(--color-orange-500-rgb), 0.15);
+            color: var(--color-warning);
+            border: 1px solid rgba(var(--color-orange-500-rgb), 0.25);
+            display: block;
+        }
+
+        .qr-code-container {
+            text-align: center;
+            padding: var(--space-20);
+            background-color: var(--color-bg-3);
+            border-radius: var(--radius-md);
+            margin: var(--space-16) 0;
+        }
+
+        .qr-code-container img {
+            max-width: 300px;
+            width: 100%;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            padding: var(--space-8);
+            background-color: white;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .modal-content {
+            position: relative;
+            z-index: 2;
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-32);
+            max-width: 400px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-content h2 {
+            margin-bottom: var(--space-24);
+            text-align: center;
+        }
+
+        .modal-content input[type="password"] {
+            width: 100%;
+            padding: var(--space-12);
+            margin-bottom: var(--space-16);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            font-size: 16px;
+            font-family: var(--font-family-base);
+        }
+
+        .modal-content input[type="password"]:focus {
+            border-color: var(--color-primary);
+            outline: var(--focus-outline);
+        }
+
+        .error-message {
+            color: var(--color-error);
+            margin-bottom: var(--space-16);
+            font-size: var(--font-size-sm);
+            text-align: center;
+        }
+
+        .error-message.hidden {
+            display: none;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: var(--space-12);
+            margin-top: var(--space-20);
+        }
+
+        .modal-buttons button {
+            flex: 1;
+        }
+
+        .admin-login-btn {
+            position: fixed;
+            bottom: var(--space-20);
+            right: var(--space-20);
+            padding: var(--space-8) var(--space-16);
+            font-size: var(--font-size-sm);
+            background: var(--color-secondary);
+            border: none;
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            color: var(--color-text);
+            transition: all var(--duration-fast) var(--ease-standard);
+            z-index: 10;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .admin-login-btn:hover {
+            background: var(--color-secondary-hover);
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .participant-section.hidden {
+            display: none;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-20);
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: var(--space-12);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: var(--space-8) var(--space-16);
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+            transition: all var(--duration-normal);
+        }
+
+        .tab-btn.active {
+            border-bottom-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .tab-btn:hover {
+            color: var(--color-text);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .video-preview {
+            width: 100%;
+            max-width: 400px;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--color-border);
+            margin: var(--space-16) 0;
+            background-color: var(--color-black);
+        }
+
+        .camera-buttons {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-20);
+        }
+
+        .camera-buttons button {
+            flex: 1;
+        }
+
+        .entry-log {
+            margin-top: var(--space-20);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .entry-item {
+            padding: var(--space-12);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-8);
+            background-color: var(--color-bg-3);
+        }
+
+        .entry-item.scanned {
+            background-color: rgba(33, 128, 141, 0.1);
+            border-color: var(--color-success);
+        }
+
+        .entry-name {
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text);
+        }
+
+        .entry-time {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-top: var(--space-4);
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: var(--space-16);
+            right: var(--space-16);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-20 {
+            margin-top: var(--space-20);
+        }
+
+        .mb-16 {
+            margin-bottom: var(--space-16);
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .gap-8 {
+            gap: var(--space-8);
+        }
+
+        .divider {
+            border-bottom: 1px solid var(--color-border);
+            margin: var(--space-16) 0;
+            padding-bottom: var(--space-16);
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: var(--space-16);
+            }
+
+            .modal-content {
+                padding: var(--space-20);
+            }
+
+            .admin-login-btn {
+                bottom: var(--space-16);
+                right: var(--space-16);
+                padding: var(--space-8) var(--space-12);
+                font-size: var(--font-size-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <h2>管理者ログイン</h2>
+            <input type="password" id="adminPassword" placeholder="パスワードを入力" autofocus>
+            <div id="loginError" class="error-message hidden"></div>
+            <div class="modal-buttons">
+                <button id="adminLoginSubmit" class="btn btn--primary">ログイン</button>
+                <button id="adminLoginCancel" class="btn btn--secondary">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Participant Section -->
+    <div id="participantSection" class="participant-section">
+        <div class="container">
+            <h1 class="text-center">📋 イベント参加登録</h1>
+
+            <div class="card">
+                <h2>参加者情報入力</h2>
+                <div id="registrationMessage" class="status-message"></div>
+
+                <form id="registrationForm" onsubmit="handleRegistration(event)">
+                    <div class="form-group">
+                        <label class="form-label">参加者名 <span style="color: var(--color-error);">*</span></label>
+                        <input type="text" id="participantName" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">メールアドレス <span style="color: var(--color-error);">*</span></label>
+                        <input type="email" id="participantEmail" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">学年 <span style="color: var(--color-error);">*</span></label>
+                        <select id="participantGrade" class="form-control" required>
+                            <option value="">選択してください</option>
+                            <option value="1年">1年</option>
+                            <option value="2年">2年</option>
+                            <option value="3年">3年</option>
+                            <option value="4年">4年</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">備考</label>
+                        <textarea id="participantNotes" class="form-control" placeholder="特記事項があればご記入ください"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--lg">登録する</button>
+                </form>
+            </div>
+
+            <div id="qrCodeSection" class="hidden">
+                <div class="card">
+                    <h2 class="text-center">✅ 登録が完了しました</h2>
+                    <p class="text-center">以下のQRコードを保存してください。イベント当日に必要です。</p>
+                    <div class="qr-code-container">
+                        <img id="qrCodeImage" src="" alt="QR Code">
+                    </div>
+                    <div class="text-center">
+                        <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-bottom: var(--space-16);">
+                            ID: <span id="displayParticipantId" style="font-weight: bold;"></span>
+                        </p>
+                    </div>
+                    <div class="flex gap-8">
+                        <button onclick="printQRCode()" class="btn btn--primary" style="flex: 1;">🖨️ 印刷する</button>
+                        <button onclick="resetForm()" class="btn btn--outline" style="flex: 1;">新しい登録</button>
+                    </div>
+                </div>
+            </div>
+
+            <button id="adminLoginBtn" class="admin-login-btn">🔐 管理者ログイン</button>
+        </div>
+    </div>
+
+    <!-- Admin Section -->
+    <div id="adminSection" class="admin-section">
+        <div class="container">
+            <div class="flex justify-between mb-16">
+                <h1>👨‍💼 管理者ダッシュボード</h1>
+                <button id="logoutBtn" class="btn btn--outline btn--sm logout-btn">ログアウト</button>
+            </div>
+
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchTab('entry-scan')">📱 入場スキャン</button>
+                <button class="tab-btn" onclick="switchTab('entry-log')">📊 入場ログ</button>
+                <button class="tab-btn" onclick="switchTab('stats')">📈 統計</button>
+            </div>
+
+            <!-- Entry Scan Tab -->
+            <div id="entry-scan" class="tab-content active">
+                <div class="card">
+                    <h2>QRコードスキャン</h2>
+                    <p style="color: var(--color-text-secondary); margin-bottom: var(--space-16);">
+                        📷 カメラでQRコードをスキャンするか、手動でIDを入力してください。
+                    </p>
+
+                    <div id="scanMessage" class="status-message"></div>
+
+                    <!-- Camera Section -->
+                    <div style="border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-16); margin-bottom: var(--space-16); background-color: var(--color-bg-3);">
+                        <h3>📷 カメラスキャン</h3>
+                        <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-bottom: var(--space-12);">
+                            ブラウザのカメラを使用してQRコードをスキャンします。
+                        </p>
+
+                        <div class="camera-buttons">
+                            <button onclick="startCamera()" class="btn btn--primary" id="startCameraBtn">📷 カメラ起動</button>
+                            <button onclick="stopCamera()" class="btn btn--outline" id="stopCameraBtn" style="display: none;">⏹️ カメラ停止</button>
+                        </div>
+
+                        <video id="videoPreview" class="video-preview hidden"></video>
+                        <canvas id="canvasPreview" style="display: none;"></canvas>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- Manual Input Section -->
+                    <div>
+                        <h3>✋ 手動入力</h3>
+                        <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-bottom: var(--space-12);">
+                            IDを直接入力する場合はこちらを使用してください。
+                        </p>
+
+                        <div class="form-group">
+                            <label class="form-label">参加者ID</label>
+                            <input type="text" id="scanInput" class="form-control" placeholder="PARTICIPANT_で始まるIDを入力...">
+                        </div>
+
+                        <button onclick="processScan()" class="btn btn--primary btn--lg">スキャン処理</button>
+                    </div>
+
+                    <div id="scanResult" class="hidden mt-20">
+                        <div id="scanResultContent"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entry Log Tab -->
+            <div id="entry-log" class="tab-content">
+                <div class="card">
+                    <h2>入場ログ</h2>
+                    <p style="color: var(--color-text-secondary); margin-bottom: var(--space-16);">
+                        本日の入場記録一覧です。
+                    </p>
+
+                    <div class="entry-log" id="entryLogContainer">
+                        <p style="text-align: center; color: var(--color-text-secondary);">まだ入場者がいません。</p>
+                    </div>
+
+                    <div style="margin-top: var(--space-16);">
+                        <button onclick="clearEntryLog()" class="btn btn--secondary">ログをクリア</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Tab -->
+            <div id="stats" class="tab-content">
+                <div class="card">
+                    <h2>統計</h2>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-16); margin-bottom: var(--space-20);">
+                        <div style="background: var(--color-bg-3); padding: var(--space-16); border-radius: var(--radius-md);">
+                            <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-8);">総登録者数</p>
+                            <p id="statsRegistered" style="font-size: var(--font-size-3xl); font-weight: bold; color: var(--color-primary);">0</p>
+                        </div>
+
+                        <div style="background: var(--color-bg-1); padding: var(--space-16); border-radius: var(--radius-md);">
+                            <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-8);">本日入場者数</p>
+                            <p id="statsEntered" style="font-size: var(--font-size-3xl); font-weight: bold; color: var(--color-success);">0</p>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--color-bg-2); padding: var(--space-16); border-radius: var(--radius-md); margin-bottom: var(--space-20);">
+                        <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-8);">入場率</p>
+                        <p id="statsRate" style="font-size: var(--font-size-2xl); font-weight: bold; color: var(--color-warning);">0%</p>
+                    </div>
+
+                    <div>
+                        <button onclick="exportToCSV()" class="btn btn--secondary btn--lg">📥 CSVエクスポート</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const ADMIN_PASSWORD = "admin2024";
+        const GOOGLE_SHEETS_WEB_APP_URL = "";
+
+        // Data storage
+        let participants = [];
+        let entryLog = [];
+        let adminLoggedIn = false;
+        let cameraActive = false;
+        let videoStream = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+            loadFromLocalStorage();
+            updateStats();
+        });
+
+        function setupEventListeners() {
+            // Admin login
+            document.getElementById('adminLoginBtn').addEventListener('click', () => {
+                document.getElementById('adminLoginModal').classList.remove('hidden');
+                document.getElementById('adminPassword').focus();
+            });
+
+            document.getElementById('adminLoginSubmit').addEventListener('click', submitAdminLogin);
+            document.getElementById('adminLoginCancel').addEventListener('click', cancelAdminLogin);
+            document.querySelector('.modal-overlay').addEventListener('click', cancelAdminLogin);
+
+            document.getElementById('adminPassword').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') submitAdminLogin();
+            });
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+
+            // Scan input
+            document.getElementById('scanInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') processScan();
+            });
+        }
+
+        function submitAdminLogin() {
+            const password = document.getElementById('adminPassword').value;
+
+            if (password === ADMIN_PASSWORD) {
+                adminLoggedIn = true;
+                document.getElementById('adminLoginModal').classList.add('hidden');
+                document.getElementById('participantSection').classList.add('hidden');
+                document.getElementById('adminSection').classList.add('active');
+                document.getElementById('adminPassword').value = '';
+            } else {
+                const errorEl = document.getElementById('loginError');
+                errorEl.textContent = 'パスワードが正しくありません';
+                errorEl.classList.remove('hidden');
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
+            }
+        }
+
+        function cancelAdminLogin() {
+            document.getElementById('adminLoginModal').classList.add('hidden');
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('loginError').classList.add('hidden');
+        }
+
+        function logout() {
+            stopCamera();
+            adminLoggedIn = false;
+            document.getElementById('adminSection').classList.remove('active');
+            document.getElementById('participantSection').classList.remove('hidden');
+            document.getElementById('scanInput').value = '';
+            document.getElementById('scanResult').classList.add('hidden');
+            document.getElementById('scanMessage').classList.remove('success', 'error', 'warning');
+        }
+
+        function handleRegistration(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('participantName').value;
+            const email = document.getElementById('participantEmail').value;
+            const grade = document.getElementById('participantGrade').value;
+            const notes = document.getElementById('participantNotes').value;
+
+            if (!name || !email || !grade) {
+                showMessage('registrationMessage', '全ての必須項目を入力してください', 'error');
+                return;
+            }
+
+            const timestamp = new Date().toISOString().replace(/[-T:.Z]/g, '').substring(0, 14);
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            const participantId = `PARTICIPANT_${timestamp}${random}`;
+
+            const participant = {
+                id: participantId,
+                name: name,
+                email: email,
+                grade: grade,
+                notes: notes,
+                registeredAt: new Date().toLocaleString('ja-JP'),
+                scanned: false
+            };
+
+            participants.push(participant);
+            saveToLocalStorage();
+
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(participantId)}`;
+            document.getElementById('qrCodeImage').src = qrUrl;
+            document.getElementById('displayParticipantId').textContent = participantId;
+
+            document.getElementById('registrationForm').style.display = 'none';
+            document.getElementById('qrCodeSection').classList.remove('hidden');
+
+            if (GOOGLE_SHEETS_WEB_APP_URL) {
+                sendToGoogleSheets('registerParticipant', participant);
+            }
+
+            updateStats();
+        }
+
+        async function startCamera() {
+            try {
+                const video = document.getElementById('videoPreview');
+
+                // 1. ストリームの取得
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment' }
+                });
+
+                videoStream = stream;
+                video.srcObject = stream;
+                video.classList.remove('hidden');
+
+                document.getElementById('startCameraBtn').style.display = 'none';
+                document.getElementById('stopCameraBtn').style.display = 'flex';
+
+                // 2. 重要な修正: メタデータがロードされ、再生が開始するのを待つ
+                // これにより、videoWidth/videoHeightが設定され、drawImageが可能になります。
+                await new Promise((resolve) => {
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        resolve();
+                    };
+                });
+
+                cameraActive = true;
+                // 3. スキャンループの開始
+                scanQRCodeFromCamera();
+            } catch (error) {
+                console.error('カメラアクセスエラー:', error);
+                showScanMessage('❌ カメラへのアクセスが拒否されました', 'error');
+            }
+        }
+
+        function stopCamera() {
+            cameraActive = false;
+            const video = document.getElementById('videoPreview');
+            video.classList.add('hidden');
+
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+            }
+
+            document.getElementById('startCameraBtn').style.display = 'flex';
+            document.getElementById('stopCameraBtn').style.display = 'none';
+        }
+
+        function scanQRCodeFromCamera() {
+            if (!cameraActive) return;
+
+            const video = document.getElementById('videoPreview');
+            const canvas = document.getElementById('canvasPreview');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height); // 幅と高さを指定
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+            if (code) {
+                const scannedId = code.data.trim();
+                
+                console.log("✅ QRコードを検出しました。ID:", scannedId); 
+
+                if (scannedId.startsWith('PARTICIPANT_')) {
+                    processScannedId(scannedId);
+                    stopCamera();
+                    return;
+                } else {
+                    console.log("⚠️ 検出されたIDは参加者IDの形式ではありません:", scannedId); 
+                }
+            }
+
+            requestAnimationFrame(scanQRCodeFromCamera);
+        }
+
+        function processScan() {
+            const scannedId = document.getElementById('scanInput').value.trim();
+            processScannedId(scannedId);
+        }
+
+        function processScannedId(scannedId) {
+            if (!scannedId) {
+                showScanMessage('IDを入力してください', 'error');
+                return;
+            }
+
+            const participant = participants.find(p => p.id === scannedId);
+
+            if (!participant) {
+                showScanMessage('❌ 登録されていない参加者です', 'error');
+                document.getElementById('scanInput').value = '';
+                return;
+            }
+
+            if (participant.scanned) {
+                showScanMessage(`⚠️ ${participant.name} さんはすでに入場済みです`, 'warning');
+                document.getElementById('scanInput').value = '';
+                return;
+            }
+
+            participant.scanned = true;
+            const scanTime = new Date().toLocaleTimeString('ja-JP');
+
+            entryLog.push({
+                participantId: scannedId,
+                name: participant.name,
+                grade: participant.grade,
+                scanTime: scanTime,
+                scanDateTime: new Date().toLocaleString('ja-JP')
+            });
+
+            saveToLocalStorage();
+            showScanMessage(`✅ 入場完了：${participant.name}`, 'success');
+
+            const resultDiv = document.getElementById('scanResult');
+            resultDiv.classList.remove('hidden');
+            document.getElementById('scanResultContent').innerHTML = `
+                <div style="background: rgba(33, 128, 141, 0.1); padding: var(--space-16); border-radius: var(--radius-md); border-left: 4px solid var(--color-success);">
+                    <p style="font-size: var(--font-size-lg); font-weight: bold; color: var(--color-success); margin-bottom: var(--space-8);">✅ 入場可能</p>
+                    <p style="font-size: var(--font-size-md); margin-bottom: var(--space-4);"><strong>${participant.name}</strong> さん</p>
+                    <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-bottom: var(--space-4);">学年: ${participant.grade}</p>
+                    <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">入場時刻: ${scanTime}</p>
+                </div>
+            `;
+
+            document.getElementById('scanInput').value = '';
+            document.getElementById('scanInput').focus();
+
+            updateEntryLog();
+            updateStats();
+
+            if (GOOGLE_SHEETS_WEB_APP_URL) {
+                sendToGoogleSheets('recordEntry', {
+                    participantId: scannedId,
+                    name: participant.name,
+                    scanTime: scanTime
+                });
+            }
+        }
+
+        function showScanMessage(message, type) {
+            const messageEl = document.getElementById('scanMessage');
+            messageEl.textContent = message;
+            messageEl.className = `status-message ${type}`;
+        }
+
+        function updateEntryLog() {
+            const container = document.getElementById('entryLogContainer');
+
+            if (entryLog.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--color-text-secondary);">まだ入場者がいません。</p>';
+                return;
+            }
+
+            container.innerHTML = entryLog.map((entry, index) => `
+                <div class="entry-item scanned">
+                    <div class="entry-name">${index + 1}. ${entry.name}</div>
+                    <div class="entry-time">学年: ${entry.grade} | 入場時刻: ${entry.scanTime}</div>
+                </div>
+            `).reverse().join('');
+        }
+
+        function updateStats() {
+            const totalRegistered = participants.length;
+            const totalEntered = entryLog.length;
+            const rate = totalRegistered > 0 ? Math.round((totalEntered / totalRegistered) * 100) : 0;
+
+            document.getElementById('statsRegistered').textContent = totalRegistered;
+            document.getElementById('statsEntered').textContent = totalEntered;
+            document.getElementById('statsRate').textContent = `${rate}%`;
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'entry-log') {
+                updateEntryLog();
+            }
+        }
+
+        function clearEntryLog() {
+            if (confirm('入場ログをクリアしますか？この操作は元に戻せません。')) {
+                entryLog = [];
+                participants.forEach(p => p.scanned = false);
+                saveToLocalStorage();
+                updateEntryLog();
+                updateStats();
+            }
+        }
+
+        function exportToCSV() {
+            let csv = 'ID,名前,メール,学年,登録時刻,入場済み\n';
+
+            participants.forEach(p => {
+                const entered = p.scanned ? '○' : '×';
+                csv += `"${p.id}","${p.name}","${p.email}","${p.grade}","${p.registeredAt}","${entered}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `participants_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        function printQRCode() {
+            const printWindow = window.open('', '', 'width=400,height=500');
+            const qrSrc = document.getElementById('qrCodeImage').src;
+            const participantId = document.getElementById('displayParticipantId').textContent;
+
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>QRコード</title>
+                    <style>
+                        body { font-family: Arial; text-align: center; padding: 20px; }
+                        img { max-width: 300px; }
+                        p { font-size: 14px; margin-top: 10px; }
+                    </style>
+                </head>
+                <body>
+                    <h2>イベント参加QRコード</h2>
+                    <img src="${qrSrc}" alt="QRコード">
+                    <p>ID: ${participantId}</p>
+                    <p style="font-size: 12px; color: #666; margin-top: 20px;">このQRコードをイベント当日に提示してください</p>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function resetForm() {
+            document.getElementById('registrationForm').style.display = 'block';
+            document.getElementById('qrCodeSection').classList.add('hidden');
+            document.getElementById('registrationForm').reset();
+            document.getElementById('participantName').focus();
+        }
+
+        function showMessage(elementId, message, type) {
+            const messageEl = document.getElementById(elementId);
+            messageEl.textContent = message;
+            messageEl.className = `status-message ${type}`;
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('participants', JSON.stringify(participants));
+            localStorage.setItem('entryLog', JSON.stringify(entryLog));
+        }
+
+        function loadFromLocalStorage() {
+            const savedParticipants = localStorage.getItem('participants');
+            const savedEntryLog = localStorage.getItem('entryLog');
+
+            if (savedParticipants) {
+                participants = JSON.parse(savedParticipants);
+            }
+
+            if (savedEntryLog) {
+                entryLog = JSON.parse(savedEntryLog);
+            }
+        }
+
+        function sendToGoogleSheets(action, data) {
+            if (!GOOGLE_SHEETS_WEB_APP_URL) {
+                return;
+            }
+
+            const payload = {
+                action: action,
+                ...data
+            };
+
+            fetch(GOOGLE_SHEETS_WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            }).catch(err => console.log('Google Sheets sync failed:', err));
+        }
+    </script>
+</body>
+</html>
