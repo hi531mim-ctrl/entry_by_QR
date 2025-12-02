@@ -48,7 +48,7 @@ POSTGRES_PRISMA_URL="postgresql://user:password@localhost:5432/entry_qr"
 POSTGRES_URL_NON_POOLING="postgresql://user:password@localhost:5432/entry_qr"
 
 # 管理者パスワード（デフォルト: admin2024）
-ADMIN_PASSWORD_HASH="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy"
+ADMIN_PASSWORD_HASH="$2a$10$XPLxwZSbbZ/EwT.7Os6ZY.msvFk5p6TRylweX0K6akjI5UYpzB0cO"
 ```
 
 ### 3. データベースのセットアップ
@@ -81,7 +81,7 @@ http://localhost:3000 にアクセス
 
 2. **管理者パスワードを設定**（Settings → Environment Variables）
    ```
-   ADMIN_PASSWORD_HASH = $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
+   ADMIN_PASSWORD_HASH = $2a$10$XPLxwZSbbZ/EwT.7Os6ZY.msvFk5p6TRylweX0K6akjI5UYpzB0cO
    ```
 
 3. **マイグレーション実行**

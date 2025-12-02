@@ -15,17 +15,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Default password: admin2024
-    const defaultPasswordHash = '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy'
+    const defaultPasswordHash = '$2a$10$XPLxwZSbbZ/EwT.7Os6ZY.msvFk5p6TRylweX0K6akjI5UYpzB0cO'
     const passwordHash = process.env.ADMIN_PASSWORD_HASH || defaultPasswordHash
 
-    // デバッグ用ログ
-    console.log('Environment variable exists:', !!process.env.ADMIN_PASSWORD_HASH)
-    console.log('Using hash (full):', passwordHash)
-    console.log('Default hash:', defaultPasswordHash)
-    console.log('Input password:', password)
-
     const isValid = await bcrypt.compare(password, passwordHash)
-    console.log('bcrypt comparison result:', isValid)
 
     if (!isValid) {
       return NextResponse.json(

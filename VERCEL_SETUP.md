@@ -21,7 +21,7 @@ Vercelは以下の環境変数を自動的に作成します：
 
 ```
 Name: ADMIN_PASSWORD_HASH
-Value: $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
+Value: $2a$10$XPLxwZSbbZ/EwT.7Os6ZY.msvFk5p6TRylweX0K6akjI5UYpzB0cO
 Environment: Production, Preview, Development
 ```
 
