@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Participant {
+  id           String   @id @default(cuid())
+  participantId String  @unique // PARTICIPANT_xxxxxxxxx
+  name         String
+  email        String
+  grade        String
+  notes        String?
+  registeredAt DateTime @default(now())
+  scanned      Boolean  @default(false)
+
+  entryLogs    EntryLog[]
+
+  @@index([participantId])
+  @@index([email])
+}
+
+model EntryLog {
+  id            String      @id @default(cuid())
+  participantId String
+  participant   Participant @relation(fields: [participantId], references: [participantId])
+  scanDateTime  DateTime    @default(now())
+
+  @@index([participantId])
+  @@index([scanDateTime])
+}

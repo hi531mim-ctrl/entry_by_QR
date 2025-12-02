@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-white: rgba(255, 255, 255, 1);
+  --color-black: rgba(0, 0, 0, 1);
+  --color-cream-50: rgba(252, 252, 249, 1);
+  --color-cream-100: rgba(255, 255, 253, 1);
+  --color-gray-200: rgba(245, 245, 245, 1);
+  --color-gray-300: rgba(167, 169, 169, 1);
+  --color-gray-400: rgba(119, 124, 124, 1);
+  --color-slate-500: rgba(98, 108, 113, 1);
+  --color-brown-600: rgba(94, 82, 64, 1);
+  --color-charcoal-700: rgba(31, 33, 33, 1);
+  --color-charcoal-800: rgba(38, 40, 40, 1);
+  --color-slate-900: rgba(19, 52, 59, 1);
+  --color-teal-300: rgba(50, 184, 198, 1);
+  --color-teal-400: rgba(45, 166, 178, 1);
+  --color-teal-500: rgba(33, 128, 141, 1);
+  --color-teal-600: rgba(29, 116, 128, 1);
+  --color-teal-700: rgba(26, 104, 115, 1);
+  --color-red-400: rgba(255, 84, 89, 1);
+  --color-red-500: rgba(192, 21, 47, 1);
+  --color-orange-400: rgba(230, 129, 97, 1);
+  --color-orange-500: rgba(168, 75, 47, 1);
+}
+
+body {
+  background-color: var(--color-cream-50);
+  color: var(--color-slate-900);
+}
+
+.btn {
+  @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer;
+}
+
+.btn-primary {
+  @apply bg-teal-500 text-white hover:bg-teal-600 active:bg-teal-700;
+}
+
+.btn-secondary {
+  @apply bg-brown-600/12 text-slate-900 hover:bg-brown-600/20;
+}
+
+.btn-outline {
+  @apply bg-transparent border border-brown-600/20 text-slate-900 hover:bg-brown-600/12;
+}
+
+.card {
+  @apply bg-cream-100 rounded-xl border border-brown-600/12 shadow-sm p-5;
+}
+
+.form-label {
+  @apply block mb-2 font-medium text-sm;
+}
+
+.form-control {
+  @apply block w-full px-3 py-2 text-sm border border-brown-600/20 rounded-lg bg-cream-100 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/40;
+}
