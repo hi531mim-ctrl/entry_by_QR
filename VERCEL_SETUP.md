@@ -15,35 +15,7 @@ Vercelは以下の環境変数を自動的に作成します：
 - `POSTGRES_URL_NON_POOLING`
 - など
 
-## ステップ2: DATABASE_URLの設定
-
-Prismaは`DATABASE_URL`を使用するため、以下のいずれかを実行：
-
-### オプションA: 環境変数を手動で設定
-
-Vercelダッシュボードの「Settings」→「Environment Variables」で：
-
-```
-Name: DATABASE_URL
-Value: [POSTGRES_PRISMA_URLの値をコピー]
-Environment: Production, Preview, Development
-```
-
-### オプションB: Vercel CLIを使用
-
-```bash
-# ローカルに環境変数をプル
-vercel env pull
-
-# .env.localファイルが作成されます
-# POSTGRES_PRISMA_URLの値をコピーしてDATABASE_URLとして設定
-
-vercel env add DATABASE_URL
-# プロンプトでPOSTGRES_PRISMA_URLの値を貼り付け
-# Production, Preview, Developmentすべてに追加
-```
-
-## ステップ3: 管理者パスワードの設定
+## ステップ2: 管理者パスワードの設定
 
 環境変数に以下を追加：
 
@@ -62,7 +34,7 @@ Environment: Production, Preview, Development
 node -e "console.log(require('bcryptjs').hashSync('your-password', 10))"
 ```
 
-## ステップ4: データベースマイグレーション
+## ステップ3: データベースマイグレーション
 
 ### ローカルから実行
 
@@ -70,9 +42,7 @@ node -e "console.log(require('bcryptjs').hashSync('your-password', 10))"
 # 環境変数をプル
 vercel env pull .env.local
 
-# DATABASE_URLをPOSTGRES_PRISMA_URLの値に設定
-# .env.localファイルを編集：
-# DATABASE_URL="[POSTGRES_PRISMA_URLの値]"
+# .env.localファイルが作成され、POSTGRES_PRISMA_URLなどが自動的に設定されます
 
 # マイグレーションを実行
 npx prisma migrate deploy
@@ -119,7 +89,7 @@ ALTER TABLE "EntryLog" ADD CONSTRAINT "EntryLog_participantId_fkey"
   ON DELETE RESTRICT ON UPDATE CASCADE;
 ```
 
-## ステップ5: デプロイ
+## ステップ4: デプロイ
 
 ```bash
 git add .
@@ -133,21 +103,22 @@ Vercelが自動的にデプロイを開始します。
 
 デプロイ前に、以下の環境変数が設定されていることを確認：
 
-- ✅ `DATABASE_URL` (POSTGRES_PRISMA_URLの値)
-- ✅ `ADMIN_PASSWORD_HASH`
-- ✅ `POSTGRES_PRISMA_URL` (自動設定)
-- ✅ `POSTGRES_URL_NON_POOLING` (自動設定)
+- ✅ `POSTGRES_PRISMA_URL` (Vercel Postgresが自動設定)
+- ✅ `POSTGRES_URL_NON_POOLING` (Vercel Postgresが自動設定)
+- ✅ `ADMIN_PASSWORD_HASH` (手動で設定)
 
 ## トラブルシューティング
 
 ### ビルドエラー: "PrismaClientInitializationError"
 
-**原因**: `DATABASE_URL`が設定されていない
+**原因**: Vercel Postgresが正しく作成されていない、または環境変数が設定されていない
 
 **解決策**:
-1. Vercelダッシュボードで環境変数を確認
-2. `DATABASE_URL`を`POSTGRES_PRISMA_URL`の値に設定
-3. 再デプロイ
+1. Vercelダッシュボードの「Storage」→「Postgres」を確認
+2. データベースが作成されているか確認
+3. プロジェクトにリンクされているか確認
+4. 環境変数`POSTGRES_PRISMA_URL`と`POSTGRES_URL_NON_POOLING`が自動設定されているか確認
+5. 再デプロイ
 
 ### マイグレーションエラー
 
@@ -159,11 +130,12 @@ Vercelが自動的にデプロイを開始します。
 
 ### 接続エラー
 
-**原因**: データベースURLが正しくない
+**原因**: データベースURLが正しくない、またはデータベースが作成されていない
 
 **解決策**:
-1. `POSTGRES_PRISMA_URL`の値を確認（pgbouncer=trueが含まれているはず）
-2. `DATABASE_URL`がこの値と一致していることを確認
+1. Vercel Postgresが正しく作成されているか確認
+2. `POSTGRES_PRISMA_URL`の値を確認（pgbouncer=trueが含まれているはず）
+3. プロジェクトとデータベースが正しくリンクされているか確認
 
 ## ローカル開発
 
@@ -176,8 +148,9 @@ vercel env pull .env.local
 # または手動で.envファイルを作成
 cp .env.example .env
 
-# DATABASE_URLをローカルのPostgreSQLに設定
-DATABASE_URL="postgresql://user:password@localhost:5432/entry_qr"
+# POSTGRES_PRISMA_URLをローカルのPostgreSQLに設定
+POSTGRES_PRISMA_URL="postgresql://user:password@localhost:5432/entry_qr"
+POSTGRES_URL_NON_POOLING="postgresql://user:password@localhost:5432/entry_qr"
 
 # マイグレーション
 npx prisma migrate dev
