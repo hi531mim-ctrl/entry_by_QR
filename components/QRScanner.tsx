@@ -13,8 +13,10 @@ export default function QRScanner({ onScan }: QRScannerProps) {
   const [error, setError] = useState('')
   const [scanning, setScanning] = useState(false)
   const [debugInfo, setDebugInfo] = useState('')
+  const [frameCount, setFrameCount] = useState(0)
   const streamRef = useRef<MediaStream | null>(null)
   const animationRef = useRef<number | null>(null)
+  const frameCountRef = useRef(0)
 
   useEffect(() => {
     startCamera()
@@ -68,18 +70,30 @@ export default function QRScanner({ onScan }: QRScannerProps) {
   }
 
   const scanQRCode = () => {
-    if (!scanning) return
+    if (!scanning) {
+      console.log('Scan stopped')
+      return
+    }
+
+    // フレームカウント更新
+    frameCountRef.current += 1
+    if (frameCountRef.current % 30 === 0) {
+      setFrameCount(frameCountRef.current)
+      console.log(`Scanning... frame ${frameCountRef.current}`)
+    }
 
     const video = videoRef.current
     const canvas = canvasRef.current
 
     if (!video || !canvas) {
+      console.log('Video or canvas not ready')
       animationRef.current = requestAnimationFrame(scanQRCode)
       return
     }
 
     const ctx = canvas.getContext('2d')
     if (!ctx) {
+      console.log('Canvas context not available')
       animationRef.current = requestAnimationFrame(scanQRCode)
       return
     }
@@ -101,13 +115,23 @@ export default function QRScanner({ onScan }: QRScannerProps) {
           setDebugInfo(`検出: ${scannedId}`)
 
           if (scannedId.startsWith('PARTICIPANT_')) {
+            console.log('Valid participant ID detected')
             onScan(scannedId)
             stopCamera()
             return
           } else {
+            console.log('Invalid QR code format:', scannedId)
             setDebugInfo(`無効なQR: ${scannedId.substring(0, 20)}...`)
           }
         }
+      } else {
+        if (frameCountRef.current % 30 === 0) {
+          console.log('Video dimensions not ready:', canvas.width, canvas.height)
+        }
+      }
+    } else {
+      if (frameCountRef.current % 30 === 0) {
+        console.log('Video readyState:', video.readyState)
       }
     }
 
@@ -139,6 +163,11 @@ export default function QRScanner({ onScan }: QRScannerProps) {
       {debugInfo && (
         <div className="mt-2 p-2 bg-blue-500/15 border border-blue-500/25 text-blue-500 text-xs rounded">
           {debugInfo}
+        </div>
+      )}
+      {scanning && (
+        <div className="mt-2 p-2 bg-gray-500/15 border border-gray-500/25 text-gray-500 text-xs rounded text-center">
+          フレーム: {frameCount}
         </div>
       )}
     </div>

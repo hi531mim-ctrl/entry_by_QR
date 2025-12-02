@@ -32,6 +32,7 @@ export default function Home() {
       const data = await response.json()
 
       if (response.ok) {
+        console.log('Generated ID:', data.participant.id)
         const qrUrl = await QRCode.toDataURL(data.participant.id, {
           width: 300,
           margin: 2,
@@ -39,6 +40,9 @@ export default function Home() {
         setQrCodeUrl(qrUrl)
         setParticipantId(data.participant.id)
         setShowQR(true)
+
+        // デバッグ：QRコードの内容を確認
+        alert(`生成されたID: ${data.participant.id}`)
       } else {
         setMessage({ text: data.error, type: 'error' })
       }
